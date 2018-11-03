@@ -1,0 +1,33 @@
+Podział na 3 sekcje:
+	- Program Marcina
+	- backend
+	- frontend
+	
+[Program Marcina]:
+	- konfiguracja (net/rest???)
+	- stworzenie testowej sieci w celu weryfikacji
+	- konfiguracja urządzeń do komunikacji z backend
+	- możliwość zmiany VLAN na interfejsach sieciowych
+	- możliwość obserwacji obciążeń interfejsów
+	
+
+[Backend/Frontend]:
+	- dodawanie switcha
+	- lista switchów
+	- lista interfejsów switcha
+	- RestAPI
+	
+	
+[Switch]:
+	- ile ma interfejsów (24 / 48)
+	- typ interfejsów (wszystkie takie same) [100Mb / 1Gb / 10Gb ]
+	- adres IP (po tym program Marcina zidentyfikuje switcha)
+	- model / opis / komentarz
+	
+[Interfejs/port] (ten od switcha, nie graficzny)
+	- wyświetlić numer VLAN (Marcin poda)
+	- wyświetlić obciążenie interfejsu (Marcin poda albo trzeba będzie samemu liczyć)
+	- może wyłączyć (opcjonalnie)
+	
+[Zmiana VLANU]
+	- z (switch1.interfejs5.521{numer VLANU}) na (switch1.interfejs5.1023{numer VLANU}) + (obsługa odmowy)

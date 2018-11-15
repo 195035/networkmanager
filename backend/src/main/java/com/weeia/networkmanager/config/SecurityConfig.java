@@ -1,9 +1,6 @@
 package com.weeia.networkmanager.config;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
@@ -11,11 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -26,8 +19,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String MAPPING_PAGE_LOGOUT = "/logout";
     private static final String MAPPING_PAGE_REGISTER = "/register";
 
+    private final PasswordEncoder encoder;
+
+    @Autowired
+    public SecurityConfig(PasswordEncoder encoder) {
+        this.encoder = encoder;
+    }
+
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/css/**");
         web.ignoring().antMatchers("/static/**");
         web.ignoring().antMatchers("/view/**");
@@ -41,22 +41,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                 .antMatchers("/api/*")
                     .hasAnyAuthority("USER")
-                .and()
-                .formLogin()
-                    .loginPage(MAPPING_PAGE_LOGIN)
-                    .permitAll()
-                .and()
-                .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher(MAPPING_PAGE_LOGOUT))
-                    .logoutSuccessUrl(MAPPING_PAGE_LOGIN)
-                    .permitAll();
+                    .anyRequest().authenticated()
+                .and().httpBasic()
+                .and().csrf().disable();
 
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ADMIN", "USER");
-        auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");
+        auth.inMemoryAuthentication().withUser("admin").password(encoder.encode("admin")).roles("ADMIN", "USER");
+        auth.inMemoryAuthentication().withUser("user").password(encoder.encode("user")).roles("USER");
     }
 
 }

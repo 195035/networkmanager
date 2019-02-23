@@ -42,4 +42,10 @@ public class SwitchServiceImpl implements ISwitchService {
     public Switch findById(Long id) {
         return switchDao.findById(id).orElse(null);
     }
+
+    @Override
+    public void delete(long id) {
+        switchDao.deleteById(id);
+        networkService.performInternalUpdate();
+    }
 }

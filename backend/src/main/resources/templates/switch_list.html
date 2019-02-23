@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <th:block th:replace="fragments/header :: headSection" th:remove="tag" />
+    <title>Switches</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container">
+    <table class="col s8">
+        <thead>
+        <tr>
+            <th>Ip</th>
+            <th>Interface type</th>
+            <th>Number of interfaces</th>
+            <th>Info</th>
+            <th>More</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!--/*@thymesVar id="users" type="Collection<com.weeia.networkmanager.domain.networkswitch.Switch>"*/-->
+        <!--/*@thymesVar id="user" type="com.weeia.networkmanager.domain.networkswitch.Switch"*/-->
+
+        <th:block th:each="switch : ${switches}">
+            <tr>
+                <td th:text="${switch.getIpAddress()}"></td>
+                <td th:text="${switch.getInterfaceType()}"></td>
+                <td th:text="${switch.getNumOfInterfaces()}"></td>
+                <td th:text="${switch.getInfo()}"></td>
+                <td> <a class="waves-effect waves-light btn" th:href="@{/web/switch/{id}(id=${switch.getId()})}">Details</a> </td>
+                <td> <a class="waves-effect waves-light btn red" th:href="@{/web/switch/delete/{id}(id=${switch.getId()})}">Delete</a> </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+    <div>
+        <div class="row" style="margin-top: 50px; text-align: center">
+            <a href="/web/addSwitch" class="btn-floating btn-large waves-effect waves-light blue"><i class="material-icons">add</i></a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -10,4 +10,6 @@ public interface ISwitchService {
 
     Switch findByIpAddress(String ip);
     Switch findById(Long id);
+
+    void delete(long id);
 }

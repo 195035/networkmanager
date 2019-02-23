@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <th:block th:replace="fragments/header :: headSection" th:remove="tag" />
+    <title>Switch details</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container">
+    <table class="col s8">
+        <thead>
+        <tr>
+            <th>Number</th>
+            <th>VLAN</th>
+            <th>Status</th>
+            <th>Incoming load</th>
+            <th>Outgoing load</th>
+            <th>Change VLAN</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!--/*@thymesVar id="ports" type="java.util.Collection<weeia.networkmanager.dto.networkswitch.PortDto>"*/-->
+        <!--/*@thymesVar id="port" type="com.weeia.networkmanager.dto.networkswitch.PortDto"*/-->
+
+            <th:block th:each="port : ${ports}">
+                <tr>
+                    <td th:text="${port.getNumber()}"></td>
+                    <td th:text="${port.getVlan()}"></td>
+                    <td>
+                        <div class="switch">
+                            <label>
+                                Off
+                                <input type="checkbox" th:checked="${port.isEnabled()}" th:onclick=
+                                        "'changeEnabled(' + ${switch.getId()} + ',' + ${port.getNumber()} + ',' + ${port.isEnabled()} + ')'" >
+                                <span class="lever"></span>
+                                On
+                            </label>
+                        </div>
+                    </td>
+                    <td th:text="${port.getIncomingLoad()}"></td>
+                    <td th:text="${port.getOutgoingLoad()}"></td>
+                    <td> <a class="btn blue" th:onclick="'changeVlan(' + ${switch.getId()} + ',' + ${port.getNumber()} + ',' + ${port.getVlan()} + ')'" >Change VLAN</a> </td>
+                </tr>
+            </th:block>
+        </tbody>
+    </table>
+</div>
+<script>
+    function changeEnabled(id, number, bEnabled) {
+        $.ajax({
+            url: '/api/port/setEnabled/' + id + '/' + (number-1) + '/' + !bEnabled,
+            type: 'POST',
+
+            success: function () {
+                window.location.reload();
+            },
+
+            error: function (xhr) {
+                window.location.reload();
+            }
+
+        });
+    }
+
+    function changeVlan(id, number, current) {
+        var newVlan = prompt("Please enter new Vlan:", current);
+
+        $.ajax({
+            url: '/api/port/changeVlan/' + id + '/' + (number-1) + '/' + newVlan,
+            type: 'POST',
+
+            success: function () {
+                window.location.reload();
+            },
+
+            error: function (xhr) {
+                window.location.reload();
+            }
+
+        });
+    }
+</script>
+</body>
+</html>

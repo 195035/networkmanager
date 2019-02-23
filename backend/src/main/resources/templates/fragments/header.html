@@ -1,0 +1,37 @@
+<!DOCTYPE html >
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<th:block th:fragment="headSection">
+    <!--<link href="../../static/main.css" rel="stylesheet" media="screen" th:href="@{/main.css}"/>-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</th:block>
+</head>
+<body>
+<nav class="blue-grey" th:fragment="header">
+    <div class="nav-wrapper">
+        <a style="margin-left: 15px" class="brand-logo left" href="/">Network Manager</a>
+        <ul id="nav-mobile " class="left" style="margin-left: 300px">
+            <li sec:authorize="isAnonymous()">
+                <a href="/login" class="waves-effect waves-light"> <i class="material-icons left">perm_identity</i> Sign In</a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <a href="/web/switches/" class="waves-effect waves-light"> <i class="material-icons left">device_hub</i> Switches</a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <a href="/web/addUser" class="waves-effect waves-light"> <i class="material-icons left">perm_identity</i> Add user</a>
+            </li>
+        </ul>
+        <ul sec:authorize="isAuthenticated()" class="right">
+            <li><a href="/logout" class="waves-effect waves-light"><i class="material-icons left">perm_identity</i>Log out</a></li>
+        </ul>
+    </div>
+</nav>
+</body> 
+</html>

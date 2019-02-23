@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
-    <meta charset="UTF-8">
-    <title>XXX</title>
+    <th:block th:replace="fragments/header :: headSection" th:remove="tag" />
+    <title>Pako News</title>
 </head>
 <body>
-    YYY
-<h1 sec:authorize="isAnonymous()">Hi Anonymus</h1>
-<h1 sec:authorize="isAuthenticated()">Hi   authenticated</h1>
+<div th:replace="fragments/header :: header">
+
+</div>
+<div class="container">
+    <!--/*@thymesVar id="AppName" type="com.pako.pakonews.Content.WelcomeController"*/-->
+    <h1 sec:authorize="isAnonymous()" th:text= " 'Welcome to Network Manager'" ></h1>
+    <h1 sec:authorize="isAuthenticated()" th:text= " 'Welcome ' + ${#authentication.name} " ></h1>
+</div>
 </body>
 </html>

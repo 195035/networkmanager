@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,23 +21,13 @@ public class PortsController {
         this.portService = portService;
     }
 
-    @GetMapping("/getVlan/{switchId}/{portNumber}")
-    public ResponseEntity<Integer> getPortVlan(@PathVariable long switchId, @PathVariable int portNumber) {
-        return ResponseEntity.ok(portService.getPortVlan(switchId, portNumber));
-    }
-
-    @GetMapping("/changeVlan/{switchId}/{portNumber}/{newVlan}")
+    @PostMapping("/changeVlan/{switchId}/{portNumber}/{newVlan}")
     public ResponseEntity<Integer> setPortVlan(@PathVariable long switchId, @PathVariable int portNumber, @PathVariable int newVlan) {
         portService.changePortVlan(switchId, portNumber, newVlan);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/getVlan/{switchId}/{portNumber}")
-    public ResponseEntity<Integer> getPortEnabled(@PathVariable long switchId, @PathVariable int portNumber) {
-        return ResponseEntity.ok(portService.getPortVlan(switchId, portNumber));
-    }
-
-    @GetMapping("/changeVlan/{switchId}/{portNumber}/{bEnabled}")
+    @PostMapping("/setEnabled/{switchId}/{portNumber}/{bEnabled}")
     public ResponseEntity<Integer> setPortEnabled(@PathVariable long switchId, @PathVariable int portNumber, @PathVariable boolean bEnabled) {
         portService.changePortEnabled(switchId, portNumber, bEnabled);
         return ResponseEntity.ok().build();

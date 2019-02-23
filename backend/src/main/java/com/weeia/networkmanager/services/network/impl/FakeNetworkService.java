@@ -24,6 +24,7 @@ public class FakeNetworkService implements NetworkService {
 
     private final SwitchDao switchDao;
     private final Map<String, List<InternalPort>> portMap;
+    private final FakeDataCreator fakeDataCreator;
 
     @Autowired
     public FakeNetworkService(SwitchDao switchDao) {
@@ -31,8 +32,10 @@ public class FakeNetworkService implements NetworkService {
         portMap = new ConcurrentHashMap<>();
 
         //run data creator thread
-        FakeDataCreator fakeDataCreator = new FakeDataCreator();
-        fakeDataCreator.run();
+        fakeDataCreator = new FakeDataCreator();
+
+        performInternalUpdate();
+        new Thread(fakeDataCreator).start();
     }
 
     private class InternalPort {
@@ -94,6 +97,7 @@ public class FakeNetworkService implements NetworkService {
     public void changePortVlan(String switchIp, int portNumber, int newVlan) {
         synchronized (portMap) {
             portMap.get(switchIp).get(portNumber).vlan.set(newVlan);
+            performInternalUpdate();
         }
     }
 
@@ -106,6 +110,7 @@ public class FakeNetworkService implements NetworkService {
     public void changePortEnabled(String switchIp, int portNumber, boolean bEnabled) {
         synchronized (portMap) {
             portMap.get(switchIp).get(portNumber).enabled.set(bEnabled);
+            performInternalUpdate();
         }
     }
 
@@ -130,6 +135,7 @@ public class FakeNetworkService implements NetworkService {
         synchronized (portMap) {
             checkForNewSwitches(switches);
             deleteObsoleteSwitches(switches);
+            fakeDataCreator.generateTraffic();
         }
     }
 
@@ -153,7 +159,7 @@ public class FakeNetworkService implements NetworkService {
     private void createNewPortList(Switch aSwitch) {
         List<InternalPort> ports = new ArrayList<>();
         for(int i = 0; i < aSwitch.getNumOfInterfaces(); i++) {
-            ports.add(new InternalPort(i%5 + 1));
+            ports.add(new InternalPort(i + 1));
         }
 
         portMap.put(aSwitch.getIpAddress(), ports);
